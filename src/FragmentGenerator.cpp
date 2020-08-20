@@ -6,16 +6,16 @@
  * received with this code.
  */
 
-#include "artdaq/FragmentGenerator.hpp"
-#include "artdaq/json_to_fhicl.hpp"
+#include "driver/FragmentGenerator.hpp"
+#include "driver/json_to_fhicl.hpp"
 #include "artdaq-core/Utilities/TimeUtils.hh"
 #include "artdaq/Generators/makeCommandableFragmentGenerator.hh"
 
 #include <fhiclcpp/make_ParameterSet.h>
 
-DEFINE_DUNE_DAQ_MODULE(dunedaq::artdaq::FragmentGenerator)
+DEFINE_DUNE_DAQ_MODULE(dunedaq::driver::FragmentGenerator)
 
-dunedaq::artdaq::FragmentGenerator::FragmentGenerator(std::string name)
+dunedaq::driver::FragmentGenerator::FragmentGenerator(std::string name)
   : DAQModule(name)
   , thread_(std::bind(&FragmentGenerator::do_work, this, std::placeholders::_1))
 {
@@ -28,13 +28,13 @@ dunedaq::artdaq::FragmentGenerator::FragmentGenerator(std::string name)
 }
 
 void
-dunedaq::artdaq::FragmentGenerator::init()
+dunedaq::driver::FragmentGenerator::init()
 {
   output_queue_.reset(new appfwk::DAQSink<artdaq::FragmentPtrs>(get_config()["output"].get<std::string>()));
 }
 
 void
-dunedaq::artdaq::FragmentGenerator::do_configure(const std::vector<std::string>& /*args*/)
+dunedaq::driver::FragmentGenerator::do_configure(const std::vector<std::string>& /*args*/)
 {
   std::string generator_plugin = get_config()["generator_plugin"].get<std::string>();
 
@@ -47,7 +47,7 @@ dunedaq::artdaq::FragmentGenerator::do_configure(const std::vector<std::string>&
 }
 
 void
-dunedaq::artdaq::FragmentGenerator::do_start(const std::vector<std::string>& /*args*/)
+dunedaq::driver::FragmentGenerator::do_start(const std::vector<std::string>& /*args*/)
 {
   if (generator_ptr_ != nullptr) {
     generator_ptr_->StartCmd(run_id_, timeout_, artdaq::TimeUtils::gettimeofday_us());
@@ -57,7 +57,7 @@ dunedaq::artdaq::FragmentGenerator::do_start(const std::vector<std::string>& /*a
 }
 
 void
-dunedaq::artdaq::FragmentGenerator::do_pause(const std::vector<std::string>& /*args*/)
+dunedaq::driver::FragmentGenerator::do_pause(const std::vector<std::string>& /*args*/)
 {
   if (generator_ptr_ != nullptr) {
     generator_ptr_->PauseCmd(timeout_, artdaq::TimeUtils::gettimeofday_us());
@@ -66,7 +66,7 @@ dunedaq::artdaq::FragmentGenerator::do_pause(const std::vector<std::string>& /*a
 }
 
 void
-dunedaq::artdaq::FragmentGenerator::do_resume(const std::vector<std::string>& /*args*/)
+dunedaq::driver::FragmentGenerator::do_resume(const std::vector<std::string>& /*args*/)
 {
   paused_ = false;
   if (generator_ptr_ != nullptr) {
@@ -75,7 +75,7 @@ dunedaq::artdaq::FragmentGenerator::do_resume(const std::vector<std::string>& /*
 }
 
 void
-dunedaq::artdaq::FragmentGenerator::do_stop(const std::vector<std::string>& /*args*/)
+dunedaq::driver::FragmentGenerator::do_stop(const std::vector<std::string>& /*args*/)
 {
   if (generator_ptr_ != nullptr) {
     generator_ptr_->StopCmd(timeout_, artdaq::TimeUtils::gettimeofday_us());
@@ -85,13 +85,13 @@ dunedaq::artdaq::FragmentGenerator::do_stop(const std::vector<std::string>& /*ar
 }
 
 void
-dunedaq::artdaq::FragmentGenerator::do_unconfigure(const std::vector<std::string>& /*args*/)
+dunedaq::driver::FragmentGenerator::do_unconfigure(const std::vector<std::string>& /*args*/)
 {
   generator_ptr_.reset(nullptr);
 }
 
 void
-dunedaq::artdaq::FragmentGenerator::do_work(std::atomic<bool>& running_flag)
+dunedaq::driver::FragmentGenerator::do_work(std::atomic<bool>& running_flag)
 {
   artdaq::FragmentPtrs frags;
 

@@ -6,7 +6,7 @@
 #include <nlohmann/json.hpp>
 
 namespace dunedaq {
-namespace artdaq {
+namespace driver {
 
 fhicl::ParameterSet
 json_to_fhicl(nlohmann::json json)

@@ -10,12 +10,12 @@
 
 #include "appfwk/CommandLineInterpreter.hpp"
 #include "appfwk/DAQProcess.hpp"
-#include "artdaq/HDF5Output.hpp"
-#include "artdaq/FragmentGenerator.hpp"
+#include "driver/HDF5Output.hpp"
+#include "driver/FragmentGenerator.hpp"
 
 #include <string>
 
-namespace dunedaq::artdaq {
+namespace dunedaq::driver {
 /**
  * @brief ModuleList for the echo_test_app
  */
@@ -29,7 +29,7 @@ class board_reader_contructor : public dunedaq::appfwk::GraphConstructor
     user_module_map["writer"].reset(new HDF5Output("writer"));
   }
 };
-} // namespace dunedaq::artdaq
+} // namespace dunedaq::driver
 
 /**
  * @brief echo_test_app main entry point
@@ -44,7 +44,7 @@ main(int argc, char* argv[])
 
   dunedaq::appfwk::DAQProcess theDAQProcess(args);
 
-  dunedaq::artdaq::board_reader_contructor gc;
+  dunedaq::driver::board_reader_contructor gc;
   theDAQProcess.register_modules(gc);
 
   return theDAQProcess.listen();

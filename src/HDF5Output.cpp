@@ -6,15 +6,15 @@
  * received with this code.
  */
 
-#include "artdaq/HDF5Output.hpp"
-#include "artdaq/json_to_fhicl.hpp"
+#include "driver/HDF5Output.hpp"
+#include "driver/json_to_fhicl.hpp"
 #include "artdaq-demo-hdf5/HDF5/MakeDatasetPlugin.hh"
 
 #include <fhiclcpp/make_ParameterSet.h>
 
-DEFINE_DUNE_DAQ_MODULE(dunedaq::artdaq::HDF5Output)
+DEFINE_DUNE_DAQ_MODULE(dunedaq::driver::HDF5Output)
 
-inline dunedaq::artdaq::HDF5Output::HDF5Output(std::string name)
+inline dunedaq::driver::HDF5Output::HDF5Output(std::string name)
   : DAQModule(name)
   , thread_(std::bind(&HDF5Output::do_work, this, std::placeholders::_1))
 {
@@ -25,13 +25,13 @@ inline dunedaq::artdaq::HDF5Output::HDF5Output(std::string name)
 }
 
 inline void
-dunedaq::artdaq::HDF5Output::init()
+dunedaq::driver::HDF5Output::init()
 {
   input_queue_.reset(new appfwk::DAQSource<artdaq::FragmentPtrs>(get_config()["input"].get<std::string>()));
 }
 
 void
-dunedaq::artdaq::HDF5Output::do_configure(const std::vector<std::string>& /*args*/)
+dunedaq::driver::HDF5Output::do_configure(const std::vector<std::string>& /*args*/)
 {
   queue_timeout_ = std::chrono::milliseconds(get_config().value<int>("queue_timeout_ms", 100));
 
@@ -53,25 +53,25 @@ dunedaq::artdaq::HDF5Output::do_configure(const std::vector<std::string>& /*args
 }
 
 void
-dunedaq::artdaq::HDF5Output::do_start(const std::vector<std::string>& /*args*/)
+dunedaq::driver::HDF5Output::do_start(const std::vector<std::string>& /*args*/)
 {
   thread_.start_working_thread();
 }
 
 void
-dunedaq::artdaq::HDF5Output::do_stop(const std::vector<std::string>& /*args*/)
+dunedaq::driver::HDF5Output::do_stop(const std::vector<std::string>& /*args*/)
 {
   thread_.stop_working_thread();
 }
 
 void
-dunedaq::artdaq::HDF5Output::do_unconfigure(const std::vector<std::string>& /*args*/)
+dunedaq::driver::HDF5Output::do_unconfigure(const std::vector<std::string>& /*args*/)
 {
   hdf_dataset_.reset(nullptr);
 }
 
 void
-dunedaq::artdaq::HDF5Output::do_work(std::atomic<bool>& running_flag)
+dunedaq::driver::HDF5Output::do_work(std::atomic<bool>& running_flag)
 {
   artdaq::FragmentPtrs frags;
   while (running_flag) {
