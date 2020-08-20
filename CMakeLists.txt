@@ -24,12 +24,9 @@ target_link_libraries(artdaq_HDF5Output_duneDAQModule appfwk::appfwk ${ARTDAQ_HD
 ##############################################################################
 daq_point_build_to( test )
 
-add_executable(driver test/driver.cxx)
-target_link_libraries(driver artdaq_HDF5Output_duneDAQModule artdaq_FragmentGenerator_duneDAQModule appfwk::appfwk  ${MF_MESSAGELOGGER})
-
 file(COPY test/driver.json DESTINATION test)
 
 ##############################################################################
 daq_point_build_to( unittest )
 
-daq_install(TARGETS driver artdaq_HDF5Output_duneDAQModule artdaq_FragmentGenerator_duneDAQModule)
+daq_install(TARGETS artdaq_HDF5Output_duneDAQModule artdaq_FragmentGenerator_duneDAQModule)

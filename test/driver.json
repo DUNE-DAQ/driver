@@ -19,10 +19,7 @@
       "user_module_type": "HDF5Output",
       "input": "fragments",
       "fileName": "output.hdf5",
-      "fragment_type_names": [
-        [ 2, "TOY1" ],
-        [ 3, "TOY2" ]
-      ]
+      "helper_plugin":  "ArtdaqDemo"
     }
   },
   "commands": {
